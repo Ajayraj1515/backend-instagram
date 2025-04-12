@@ -1,35 +1,52 @@
-# Instagram Login App - Frontend
 
-This is the frontend part of a MERN stack project that integrates with the Instagram API (Graph API v18.0). It allows users to log in using Instagram, view their profile, see media/posts, and reply to comments.
+---
 
-## 🚀 Live Demo
+### 📁 `Backend/README.md`
 
-🔗 [Click to open the frontend](https://dhamojiajayapp.netlify.app/)
+```md
+# Instagram Login App - Backend
+
+This is the backend server for the Instagram Login MERN project. It handles authentication, access tokens, fetching user data and media from the Instagram Graph API, and posting replies to comments.
+
+## 🚀 Deployed Link
+
+🔗 [Backend API Live](https://backend-instagram-gh7g.onrender.com)
 
 ---
 
 ## ✨ Features
 
-- "Login with Instagram" button
-- Displays Instagram profile details (username, profile picture, etc.)
-- Lists user's Instagram media (images/videos)
-- Comment reply feature on posts
+- Instagram OAuth2 Authentication
+- Fetch Instagram profile details
+- Get media/feed of the user
+- Reply to comments on media
 
 ---
 
 ## 🛠️ Tech Stack
 
-- React.js
+- Node.js
+- Express.js
+- MongoDB (via Mongoose)
 - Axios
-- Tailwind CSS / CSS
-- Deployed via **Netlify**
+- Instagram Graph API v18.0
+- Deployed via **Render**
 
 ---
 
-## 📦 Installation & Running Locally
 
-```bash
-git clone https://github.com/yourusername/instagram-frontend.git
-cd instagram-frontend
-npm install
-npm start
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+instagramClientId=your_instagram_app_id
+instagramClientSecret=your_instagram_app_secret
+instagramRedirectUri=https://dhamojiajayapp.netlify.app/instagram/callback
+frontendRedirectUri=https://dhamojiajayapp.netlify.app/dashboard
+
+
