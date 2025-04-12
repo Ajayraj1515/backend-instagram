@@ -4,14 +4,12 @@ const config = require('../config/config');
 
 const instagramAuthUrl = 'https://api.instagram.com/oauth/authorize';
 const instagramTokenUrl = 'https://api.instagram.com/oauth/access_token';
-const instagramGraphApiUrl = 'https://graph.instagram.com/v18.0'; 
-
+const instagramGraphApiUrl = 'https://graph.instagram.com/v18.0';
 
 exports.initiateInstagramLogin = (req, res) => {
-  const authUrl = `${instagramAuthUrl}?client_id=${config.facebookAppId}&redirect_uri=${config.instagramRedirectUri}&scope=user_profile,user_media&response_type=code`;
+  const authUrl = `${instagramAuthUrl}?client_id=${config.instagramClientId}&redirect_uri=${config.instagramRedirectUri}&scope=user_profile,user_media&response_type=code`;
   res.redirect(authUrl);
 };
-
 
 exports.handleInstagramCallback = async (req, res) => {
   const { code } = req.query;
@@ -21,10 +19,9 @@ exports.handleInstagramCallback = async (req, res) => {
   }
 
   try {
-    
     const tokenResponse = await axios.post(instagramTokenUrl, {
-      client_id: config.facebookAppId,
-      client_secret: config.facebookAppSecret,
+      client_id: config.instagramClientId, // Use Instagram Client ID
+      client_secret: config.instagramClientSecret, // Use Instagram Client Secret
       grant_type: 'authorization_code',
       redirect_uri: config.instagramRedirectUri,
       code,
@@ -32,7 +29,6 @@ exports.handleInstagramCallback = async (req, res) => {
 
     const { access_token, user_id } = tokenResponse.data;
 
-    
     const profileResponse = await axios.get(`${instagramGraphApiUrl}/${user_id}`, {
       params: {
         fields: 'id,username,name,profile_picture_url',
@@ -42,7 +38,6 @@ exports.handleInstagramCallback = async (req, res) => {
 
     const profileData = profileResponse.data;
 
-    
     let user = await User.findOne({ instagramId: profileData.id });
     if (!user) {
       user = new User({
@@ -57,7 +52,6 @@ exports.handleInstagramCallback = async (req, res) => {
       await user.save();
     }
 
-    
     res.redirect(`${config.frontendRedirectUri}?accessToken=${access_token}`);
 
   } catch (error) {
@@ -65,7 +59,6 @@ exports.handleInstagramCallback = async (req, res) => {
     res.status(500).send('Failed to authenticate with Instagram.');
   }
 };
-
 
 exports.getUserProfile = async (req, res) => {
   const { accessToken } = req.query;
@@ -88,7 +81,6 @@ exports.getUserProfile = async (req, res) => {
   }
 };
 
-
 exports.getUserFeed = async (req, res) => {
   const { accessToken } = req.query;
 
@@ -110,7 +102,6 @@ exports.getUserFeed = async (req, res) => {
   }
 };
 
-
 exports.getPostComments = async (req, res) => {
   const { postId, accessToken } = req.query;
 
@@ -131,7 +122,6 @@ exports.getPostComments = async (req, res) => {
     res.status(500).json({ message: `Failed to fetch comments for post ${postId}.` });
   }
 };
-
 
 exports.replyToComment = async (req, res) => {
   const { postId, commentId, message, accessToken } = req.body;
